@@ -105,8 +105,8 @@ acceptance suite completed with 47 passed and zero failures:
 | `uv pip check` | PASS; 33 installed packages compatible |
 | `git diff --check` | PASS; checked after the final report update and again on the staged diff |
 | Fresh Python 3.13 environment outside checkout | PASS; wheel install, `uv pip check`, isolated `-I` CLI, direct SQLite receipt verification |
-| GitHub push and remote SHA comparison | Pending |
-| GitHub Actions workflow | Pending |
+| GitHub push and remote SHA comparison | PASS; local `HEAD`, `origin/main`, `git ls-remote`, and GitHub API agree on `ca34645ce7a6f1e546c14ed72fd10279b0e0f7f8` |
+| GitHub Actions workflow | PASS; [run 39875393218](https://github.com/miku-wwl/aig-v03-consumer-lab/actions/runs/39875393218), all 12 qualification steps succeeded on that commit |
 
 Isolated qualification used build directory
 `C:\Users\weila\AppData\Local\Temp\aig-v03-consumer-lab-build-20261023-125511` and
@@ -131,6 +131,11 @@ payload digest, and binding identity.
 ## Remote delivery
 
 The target repository already existed as a private GitHub repository with default branch `main`
-and initial commit `4b394644c15ba1c9d36bb7697abb3cd0185ee756`. It is being reused without changing
-visibility. Push SHA equality and the resulting GitHub Actions run are recorded here after remote
-qualification.
+and initial commit `4b394644c15ba1c9d36bb7697abb3cd0185ee756`. It was reused without changing
+visibility. HTTPS push of qualification commit `ca34645ce7a6f1e546c14ed72fd10279b0e0f7f8` was
+verified against the local branch, tracking ref, `git ls-remote`, and GitHub API. Workflow run
+`39875393218` completed successfully for that commit; checkout, locked install, pin and snapshot
+checks, Ruff, all tests, synthetic CLI smoke, dependency check, and whitespace check each passed.
+
+The documentation was then updated with these observed remote results. That follow-up commit also
+triggers the same workflow; its run is checked after push and reported as the latest remote result.
