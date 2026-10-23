@@ -1,0 +1,12 @@
+{
+  "content_sha256": "499f7c64b551dbfd48d640606da0b4ebb9e67c39e9544ed7eb120f08d732d10e",
+  "expected_aig_release": "v0.3.0",
+  "expected_release_commit": "bb8e8fb1234128613a750bee17967b225072bb14",
+  "generated_agents_sha256": "b5db5e64eed436a7c9bf9b2021c0f9a6ec8fdb0bda61c5c39fde8dc2f0cf998f",
+  "overlay_sha256": "9cb0ea7f96c5f78b96e2529a32a34a7f816716805dd9360a9504d170edbc94b2",
+  "retrieved_at": "2026-10-22T23:56:48Z",
+  "schema_version": 1,
+  "source_blob_sha": "f14307dcc124a0eaefc24dbc3cb64643f35b1fa9",
+  "source_commit": "7f635adf13f105cf4ed8408766c47e612048773c",
+  "source_url": "https://raw.githubusercontent.com/miku-wwl/agentic-intent-gate/main/docs/AGENTS-dependence.md"
+}

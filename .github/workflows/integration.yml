@@ -1,0 +1,61 @@
+name: AIG consumer integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out consumer repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Install uv and Python 3.13
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          python-version: "3.13"
+          enable-cache: false
+
+      - name: Install locked dependencies
+        run: uv sync --locked
+
+      - name: Verify installed AIG release and immutable pin
+        run: >-
+          uv run python -c "import importlib.metadata as m, json, agentic_intent_gate.runtime as r;
+          d=m.distribution('agentic-intent-gate'); u=json.loads(d.read_text('direct_url.json'));
+          assert m.version('agentic-intent-gate') == '0.3.0';
+          assert u['vcs_info']['commit_id'] == 'bb8e8fb1234128613a750bee17967b225072bb14';
+          print(r.__file__)"
+
+      - name: Check generated AGENTS instructions offline
+        run: uv run python scripts/sync_agents.py --check
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Ruff format
+        run: uv run ruff format --check .
+
+      - name: Full deterministic acceptance suite
+        run: uv run pytest -q
+
+      - name: Synthetic local end-to-end smoke test
+        run: >-
+          uv run python -m aig_consumer_lab demo
+          --directory "${RUNNER_TEMP}/aig-consumer-lab-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          --synthetic-test-consent
+
+      - name: Check installed dependency consistency
+        run: uv pip check
+
+      - name: Check patch whitespace
+        run: git diff --check
